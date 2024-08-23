@@ -1,0 +1,20 @@
+{
+  "name": "message",
+  "version": "0.0.1",
+  "description": "The Message App",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "keywords": [
+    "electron",
+    "react.js",
+    "typescript"
+  ],
+  "author": "Zvikomborero Masike",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^32.0.1"
+  }
+}
