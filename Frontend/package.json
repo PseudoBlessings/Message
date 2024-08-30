@@ -5,7 +5,10 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "concurrently -k \"cd client && npm start\" \"electron .\"",
+    "dev": "concurrently -k \"cd client && npm start\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=development && electron .\"",
+    "electron-dev": "cross-env NODE_ENV=development && electron .",
+    "react-dev": "cd client && npm start"
   },
   "keywords": [
     "electron",
@@ -15,6 +18,13 @@
   "author": "Zvikomborero Masike",
   "license": "ISC",
   "dependencies": {
+    "cross-env": "^7.0.3",
     "electron": "^32.0.1"
+  },
+  "devDependencies": {
+    "chokidar": "^3.6.0",
+    "concurrently": "^8.2.2",
+    "electron-reload": "^2.0.0-alpha.1",
+    "wait-on": "^8.0.0"
   }
 }
