@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "The Message App",
   "main": "main.js",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "concurrently -k \"cd client && npm start\" \"electron .\"",

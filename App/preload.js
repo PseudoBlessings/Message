@@ -7,8 +7,8 @@ contextBridge.exposeInMainWorld('electron', {
 })
 
 contextBridge.exposeInMainWorld('ipcRenderer',{
-    openNewWindow: (url, title) => {
+    openLoginWindow: (url, title) => {
         console.log('Sending open-login-window IPC message with:', url, title);
-        ipcRenderer.send('open-new-window', url, title);
+        ipcRenderer.send('open-login-window', url, title);
     }
 })
