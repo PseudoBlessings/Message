@@ -3,6 +3,8 @@ const {dropTable, createTable, insertIntoTable,
     selectAllFromTable, deleteAllFromTable, 
     runCommand, getCommand, initializeDatabaseTables, deleteDatabaseFile} = require('../util/database-utility.js');
 
+const { test, expect, it, describe } = require('@jest/globals');
+
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const path = require('path');
@@ -80,7 +82,7 @@ test('Function: insertIntoTable | Should insert values into a Table', (done)=>{
 
 describe('selectFromTable',() => {
     db.run(`CREATE TABLE IF NOT EXISTS SelectFromTable (id INTEGER PRIMARY KEY);`);
-    it('Should select values from a table without WHERE statement', ()=>{
+    it('Should select values from a table without WHERE statement', (done)=>{
         db.serialize(() =>{
             // insert value
             db.run(`INSERT INTO SelectFromTable (id) VALUES (1);`);
@@ -89,17 +91,43 @@ describe('selectFromTable',() => {
                 console.log(typeof rows);
                 console.log(rows);
                 expect(rows).toEqual([{ id: 1 }]);
+                done();
             })
         });
     });
-    it('Should select values from a table with WHERE statement', ()=>{
-        //insert value
-        db.run(`INSERT INTO SelectFromTable (id) VALUES (983);`);
-        // run select from Table (testing with where statement)
-        selectFromTable(db,"SelectFromTable", "id", "id = 983").then((rows)=>{
-            console.log(typeof rows);
-            console.log(rows);
-            expect(rows).toEqual([{ id: 983 }]);
+    it('Should select values from a table with WHERE statement', (done)=>{
+        db.serialize(()=>{
+            //insert value
+            db.run(`INSERT INTO SelectFromTable (id) VALUES (983);`);
+            // run select from Table (testing with where statement)
+            selectFromTable(db,"SelectFromTable", "id", "id = 983").then((rows)=>{
+                console.log(typeof rows);
+                console.log(rows);
+                expect(rows).toEqual([{ id: 983 }]);
+                done();
+            })
         })
+    });
+});
+
+describe('updateTable', ()=>{
+    db.run(`CREATE TABLE IF NOT EXISTS UpdateTable (id INTEGER PRIMARY KEY);`);
+    it('should update a row from a table', (done)=>{
+        db.serialize(() =>{
+            // add insert data
+            db.run(`INSERT INTO UpdateTable (id) VALUES (983);`);
+            db.run(`INSERT INTO UpdateTable (id) VALUES (91);`);
+            db.run(`INSERT INTO UpdateTable (id) VALUES (4);`);
+            db.run(`INSERT INTO UpdateTable (id) VALUES (40);`);
+            // run the function
+            updateTable(db, "UpdateTable", "id = 9", "id = 983");
+            // check the value
+            db.get("SELECT * FROM UpdateTable WHERE id = 9;", (err, row)=>{
+                expect(err).toBeNull;
+                console.log(row);
+                expect(row.id).toEqual(9);
+                done();
+            })
+        });
     });
 });

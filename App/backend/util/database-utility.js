@@ -85,14 +85,9 @@ function selectFromTable(database, table_name, columns = "*", where = "") {
  * @param {string} set 
  * @param {string} where 
  */
-function updateTable(database, table_name, set, where = "") {
+function updateTable(database, table_name, set, where) {
     database.serialize(() => {
-        if(where !== ""){
-            database.run(`UPDATE ${table_name} SET ${set} WHERE ${where};`);
-        }
-        else{
-            database.run(`UPDATE ${table_name} SET ${set};`);
-        }
+        database.run(`UPDATE ${table_name} SET ${set} WHERE ${where};`);
     });
 }
 
@@ -156,11 +151,11 @@ function runCommand(database, command = "") {
  */
 function getCommand(database, command = "") {
     return new Promise((resolve, reject) => {
-        database.get(command, (err, row) => {
+        database.all(command, (err, rows) => {
             if (err) {
                 reject(err);
             } else {
-                resolve(row);
+                resolve(rows);
             }
         });
     });
