@@ -131,3 +131,87 @@ describe('updateTable', ()=>{
         });
     });
 });
+
+describe('deleteFromTable', ()=>{
+    db.run(`CREATE TABLE IF NOT EXISTS DeleteFromTable (id INTEGER PRIMARY KEY);`);
+    it('should delete a row from a table', (done)=>{
+        db.serialize(() =>{
+            // add insert data
+            db.run(`INSERT INTO DeleteFromTable (id) VALUES (983);`);
+            db.run(`INSERT INTO DeleteFromTable (id) VALUES (91);`);
+            db.run(`INSERT INTO DeleteFromTable (id) VALUES (4);`);
+            db.run(`INSERT INTO DeleteFromTable (id) VALUES (40);`);
+            // run the function
+            deleteFromTable(db, "DeleteFromTable", "id = 91");
+            // check the value
+            db.get("SELECT * FROM DeleteFromTable WHERE id = 91;", (err, row)=>{
+                expect(err).toBeNull;
+                console.log(row);
+                expect(row).toBe(undefined);
+                done();
+            })
+        });
+    });
+});
+
+describe('selectAllFromTable', ()=>{
+    db.run(`CREATE TABLE IF NOT EXISTS SelectAllFromTable (id INTEGER PRIMARY KEY);`);
+    it('should select all rows from a table', (done)=>{
+        db.serialize(() =>{
+            // add insert data
+            db.run(`INSERT INTO SelectAllFromTable (id) VALUES (983);`);
+            db.run(`INSERT INTO SelectAllFromTable (id) VALUES (91);`);
+            db.run(`INSERT INTO SelectAllFromTable (id) VALUES (4);`);
+            db.run(`INSERT INTO SelectAllFromTable (id) VALUES (40);`);
+            // run the function
+            selectAllFromTable(db, "SelectAllFromTable").then((rows)=>{
+                console.log(rows);
+                expect(rows).toEqual([{ id: 4 }, { id: 40 }, { id: 91 }, { id: 983 }]);
+                done();
+            });
+        });
+    });
+}, 10000);
+
+describe('deleteAllFromTable', ()=>{
+    db.run(`CREATE TABLE IF NOT EXISTS DeleteAllFromTable (id INTEGER PRIMARY KEY);`);
+    it('should delete all rows from a table', (done)=>{
+        db.serialize(() =>{
+            // add insert data
+            db.run(`INSERT INTO DeleteAllFromTable (id) VALUES (983);`);
+            db.run(`INSERT INTO DeleteAllFromTable (id) VALUES (91);`);
+            db.run(`INSERT INTO DeleteAllFromTable (id) VALUES (4);`);
+            db.run(`INSERT INTO DeleteAllFromTable (id) VALUES (40);`);
+            // run the function
+            deleteAllFromTable(db, "DeleteAllFromTable");
+            // check the value
+            db.all("SELECT * FROM DeleteAllFromTable;", (err, rows)=>{
+                expect(err).toBeNull;
+                console.log(rows);
+                expect(rows).toEqual([]);
+                done();
+            });
+        });
+    });
+});
+
+describe('runCommand', ()=>{
+    it('should run a command', (done)=>{
+        runCommand(db, "CREATE TABLE IF NOT EXISTS RunCommandTest (id INTEGER PRIMARY KEY);");
+        db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='RunCommandTest';", (err, row) => {
+            expect(err).toBeNull();
+            console.log(row);
+            expect(row).toHaveProperty('name', 'RunCommandTest');
+            done();
+        });
+    });
+});
+
+describe('getCommand', ()=>{
+    it('should get a command', (done)=>{
+        getCommand(db, "PRAGMA table_info(RunCommandTest);").then((rows)=>{
+            console.log(rows);
+            done();
+        });
+    });
+});
