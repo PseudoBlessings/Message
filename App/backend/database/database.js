@@ -1,6 +1,8 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
+const database_utility = require("../util/database-utility")
+
 const dbPath = path.resolve(__dirname, 'mydatabase.db');
 
 const db = new sqlite3.Database(dbPath, (err) => {
@@ -12,10 +14,12 @@ const db = new sqlite3.Database(dbPath, (err) => {
     }
 });
 
-function initializeDatabase(){
-    db.serialize(()=>{
-        db.run('CREATE TABLE IF NOT EXISTS Platforms (platform_id varchar(255) NOT NULL, PRIMARY KEY (platform_id))');
+/**
+ * fecthes all the availble Platforms from the database
+ * @returns Object
+ */
+function fetchPlatforms(){
+    database_utility.selectAllFromTable(db,"Platforms").then((row)=>{
+        return row;
     });
 }
-
-module.exports = db;
