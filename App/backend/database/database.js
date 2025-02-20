@@ -55,7 +55,7 @@ function addPlatform(platform){
  * No return value
  */
 function removePlatform(platform){
-    database_utility.deleteFromTable(db,"Platforms",platform);
+    database_utility.deleteFromTable(db,"Platforms", `platform_id = '${platform}'`);
 }
 
 /**

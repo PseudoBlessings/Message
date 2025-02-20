@@ -28,6 +28,17 @@ describe('Database Tests', () => {
         });
     });
 
+    describe('Function: removePlatform', () => {
+        it('Should remove a platform from the database', (done) => {
+            database.removePlatform("TestPlatform");
+            database.db.all("SELECT * FROM Platforms;", (err, rows) => {
+                expect(err).toBeNull();
+                expect(rows).toHaveLength(0);
+                done();
+            });
+        });
+    });
+
     describe('Function: deleteDatabase', () => {
         it('Should delete the database file', (done) => {
             database.deleteDatabase();
