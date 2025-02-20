@@ -39,10 +39,18 @@ function createTable(database, table_name, columns = "") {
  * @param { Database } database - The database 
  * @param { string } table_name - The table
  * @param { string } columns - The columns
- * @param { string } values - The values
+ * @param { string|number|boolean } values - The values
  */
 function insertIntoTable(database, table_name, columns, values) {
     database.serialize(() => {
+        if(typeof values === "string"){
+            values = `'${values}'`;
+        }
+
+        else if(typeof values === "boolean"){
+            values = values ? 1 : 0;
+        }
+
         database.run(`INSERT INTO "${table_name}" (${columns}) VALUES (${values});`);
     });
 }

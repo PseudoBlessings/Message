@@ -1,7 +1,8 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const database_utility = require("../util/database-utility")
+const database_utility = require("../util/database-utility");
+const { table } = require('console');
 
 const dbPath = path.resolve(__dirname, 'mydatabase.db');
 
@@ -14,6 +15,11 @@ const db = new sqlite3.Database(dbPath, (err) => {
     }
 });
 
+/**
+ * Function to initialize the database
+ * No return value
+ * No parameters
+*/
 function initializeDatabase(){
     //initialize the database tables
 
@@ -25,24 +31,42 @@ function initializeDatabase(){
     //initialize the Platform Accounts table: this table will store the accounts that the user has on the platforms
 }
 
+/**
+ * Function to delete the database
+ * No return value
+ * No parameters
+ */
 function deleteDatabase(){
     database_utility.deleteDatabaseFile(db,dbPath);
 }
 
 /**
- * 
+ * Function to add a platform to the database
  * @param {string} platform 
+ * No return value
  */
 function addPlatform(platform){
-    database_utility.insertIntoTable(db,"Platforms",platform);
+    database_utility.insertIntoTable(db,"Platforms", "platform_id", platform);
 }
 
 /**
- * 
+ * Function to remove a platform from the database
  * @param {string} platform 
+ * No return value
  */
 function removePlatform(platform){
     database_utility.deleteFromTable(db,"Platforms",platform);
+}
+
+/**
+ * function to select a specific platform from the database
+ * @param {string} platform
+ * @returns Object
+ */
+function selectPlatforms(platform){
+    database_utility.selectFromTable(db,"Platforms", "*", platform).then((rows)=>{
+        return rows;
+    });
 }
 
 /**
