@@ -61,7 +61,7 @@ function insertIntoTable(database, table_name, columns, values) {
  * @param {string} table_name - The table where the value comes from
  * @param {string} columns - The columns where the value comes from
  * @param {string} where - The where statement to choose the value
- * @returns
+ * @returns promise
  */
 function selectFromTable(database, table_name, columns = "*", where = "") {
     return new Promise((resolve, reject) => {

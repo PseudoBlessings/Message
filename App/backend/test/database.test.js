@@ -17,6 +17,9 @@ describe('Database Tests', () => {
     });
 
     describe('Function: addPlatform', () => {
+        beforeEach((done) => {
+            database.db.run("DELETE FROM Platforms;", done);
+        });
         it('Should add a platform to the database', (done) => {
             database.addPlatform("TestPlatform");
             database.db.all("SELECT * FROM Platforms;", (err, rows) => {
@@ -35,6 +38,23 @@ describe('Database Tests', () => {
                 expect(err).toBeNull();
                 expect(rows).toHaveLength(0);
                 done();
+            });
+        });
+    });
+
+    describe('Function: selectFromTable', () => {
+        beforeEach((done) => {
+            database.addPlatform("TestPlatform");
+            done();
+        });
+        database.db.serialize(()=>{
+            database.addPlatform("TestPlatform");
+            it('Should select a platform from the database', (done) => {
+                database.selectPlatforms("TestPlatform").then((rows) => {
+                    console.log(rows);
+                    expect(rows).toHaveLength(1);
+                    done();
+                });
             });
         });
     });

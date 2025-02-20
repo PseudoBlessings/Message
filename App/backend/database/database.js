@@ -64,9 +64,7 @@ function removePlatform(platform){
  * @returns Object
  */
 function selectPlatforms(platform){
-    database_utility.selectFromTable(db,"Platforms", "*", platform).then((rows)=>{
-        return rows;
-    });
+    return database_utility.selectFromTable(db,"Platforms", "*", `platform_id = '${platform}'`);
 }
 
 /**
@@ -79,4 +77,4 @@ function fetchPlatforms(){
     });
 }
 
-module.exports = {db, dbPath, initializeDatabase, deleteDatabase, addPlatform, removePlatform, fetchPlatforms};
+module.exports = {db, dbPath, initializeDatabase, deleteDatabase, addPlatform, removePlatform, selectPlatforms, fetchPlatforms};
