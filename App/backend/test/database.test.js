@@ -93,6 +93,17 @@ describe('Database Tests', () => {
         });
     });
 
+    describe('Function: selectPlatformAccounts', () => {
+        it('Should select a platform account from the database', (done) => {
+            database.addPlatformAccount("TestAccount", "TestPlatform");
+            database.selectPlatformAccounts("TestAccount", "TestPlatform").then((rows) => {
+                console.log(rows);
+                expect(rows).toHaveLength(1);
+                done();
+            });
+        });
+    });
+
     describe('Function: deleteDatabase', () => {
         it('Should delete the database file', (done) => {
             database.deleteDatabase();
