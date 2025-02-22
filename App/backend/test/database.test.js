@@ -82,6 +82,17 @@ describe('Database Tests', () => {
         });
     });
 
+    describe('Function: removePlatformAccount', () => {
+        it('Should remove a platform account from the database', (done) => {
+            database.removePlatformAccount("TestAccount", "TestPlatform");
+            database.db.all("SELECT * FROM 'Platform Accounts';", (err, rows) => {
+                expect(err).toBeNull();
+                expect(rows).toHaveLength(0);
+                done();
+            });
+        });
+    });
+
     describe('Function: deleteDatabase', () => {
         it('Should delete the database file', (done) => {
             database.deleteDatabase();

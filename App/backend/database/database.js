@@ -86,5 +86,9 @@ function addPlatformAccount(account, platform){
     database_utility.insertIntoTable(db, "Platform Accounts", data);
 }
 
+function removePlatformAccount(account, platform){
+    database_utility.deleteFromTable(db, "Platform Accounts", `account_id = '${account}' AND platform_id = '${platform}'`);
+}
+
 module.exports = {db, dbPath, initializeDatabase, deleteDatabase, addPlatform, 
-    removePlatform, selectPlatforms, fetchPlatforms, addPlatformAccount};
+    removePlatform, selectPlatforms, fetchPlatforms, addPlatformAccount, removePlatformAccount};
