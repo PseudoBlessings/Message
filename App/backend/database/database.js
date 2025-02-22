@@ -105,5 +105,10 @@ function selectPlatformAccounts(account){
     return database_utility.selectFromTable(db, "Platform Accounts", "*", `account_id = '${account}'`);
 }
 
+function fetchPlatformAccounts(){
+    return database_utility.selectAllFromTable(db, "Platform Accounts");
+}
+
 module.exports = {db, dbPath, initializeDatabase, deleteDatabase, addPlatform, 
-    removePlatform, selectPlatforms, fetchPlatforms, addPlatformAccount, removePlatformAccount, selectPlatformAccounts};
+    removePlatform, selectPlatforms, fetchPlatforms, addPlatformAccount, 
+    removePlatformAccount, selectPlatformAccounts, fetchPlatformAccounts};
