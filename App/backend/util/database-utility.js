@@ -36,21 +36,23 @@ function createTable(database, table_name, columns = "") {
 
 /**
  * Insert values/Data into Table
- * @param { Database } database - The database 
- * @param { string } table_name - The table
- * @param { string } columns - The columns
- * @param { string|number|boolean } values - The values
+ * @param {Database} database - The database 
+ * @param {string} table_name - The table
+ * @param {Object} data - The object containing column-value pairs
  */
-function insertIntoTable(database, table_name, columns, values) {
+function insertIntoTable(database, table_name, data) {
+    const columns = Object.keys(data).join(", ");
+    const values = Object.values(data).map(value => {
+        if (typeof value === "string") {
+            return `'${value}'`;
+        } else if (typeof value === "boolean") {
+            return value ? 1 : 0;
+        } else {
+            return value;
+        }
+    }).join(", ");
+
     database.serialize(() => {
-        if(typeof values === "string"){
-            values = `'${values}'`;
-        }
-
-        else if(typeof values === "boolean"){
-            values = values ? 1 : 0;
-        }
-
         database.run(`INSERT INTO "${table_name}" (${columns}) VALUES (${values});`);
     });
 }

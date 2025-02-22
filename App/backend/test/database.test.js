@@ -69,6 +69,19 @@ describe('Database Tests', () => {
         });
     });
 
+    describe('Function: addPlatformAccount', () => {
+        it('Should add a platform account to the database', (done) => {
+            database.addPlatformAccount("TestAccount", "TestPlatform");
+            database.db.all("SELECT * FROM 'Platform Accounts';", (err, rows) => {
+                expect(err).toBeNull();
+                console.log(rows);
+                expect(rows[0]).toHaveProperty('account_id', 'TestAccount');
+                expect(rows[0]).toHaveProperty('platform_id', 'TestPlatform');
+                done();
+            });
+        });
+    });
+
     describe('Function: deleteDatabase', () => {
         it('Should delete the database file', (done) => {
             database.deleteDatabase();

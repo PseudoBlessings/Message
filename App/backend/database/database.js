@@ -46,7 +46,7 @@ function deleteDatabase(){
  * No return value
  */
 function addPlatform(platform){
-    database_utility.insertIntoTable(db,"Platforms", "platform_id", platform);
+    database_utility.insertIntoTable(db,"Platforms", {"platform_id": platform});
 }
 
 /**
@@ -61,7 +61,7 @@ function removePlatform(platform){
 /**
  * function to select a specific platform from the database
  * @param {string} platform
- * @returns Object
+ * @returns {Object}
  */
 function selectPlatforms(platform){
     return database_utility.selectFromTable(db,"Platforms", "*", `platform_id = '${platform}'`);
@@ -69,10 +69,22 @@ function selectPlatforms(platform){
 
 /**
  * fecthes all the availble Platforms from the database
- * @returns Object
+ * @returns {Object}
  */
 function fetchPlatforms(){
     return database_utility.selectAllFromTable(db,"Platforms");
 }
 
-module.exports = {db, dbPath, initializeDatabase, deleteDatabase, addPlatform, removePlatform, selectPlatforms, fetchPlatforms};
+/**
+ * 
+ * @param {string} account 
+ * @param {string} platform 
+ * @returns {None}
+ */
+function addPlatformAccount(account, platform){
+    let data = {account_id: account, platform_id: platform};
+    database_utility.insertIntoTable(db, "Platform Accounts", data);
+}
+
+module.exports = {db, dbPath, initializeDatabase, deleteDatabase, addPlatform, 
+    removePlatform, selectPlatforms, fetchPlatforms, addPlatformAccount};
