@@ -59,6 +59,16 @@ describe('Database Tests', () => {
         });
     });
 
+    describe('Function: fetchPlatforms', () => {
+        it('Should fetch all platforms from the database', (done) => {
+            database.fetchPlatforms().then((rows) => {
+                console.log(rows);
+                expect(rows).toHaveLength(1);
+                done();
+            });
+        });
+    });
+
     describe('Function: deleteDatabase', () => {
         it('Should delete the database file', (done) => {
             database.deleteDatabase();

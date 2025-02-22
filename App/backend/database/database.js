@@ -72,9 +72,7 @@ function selectPlatforms(platform){
  * @returns Object
  */
 function fetchPlatforms(){
-    database_utility.selectAllFromTable(db,"Platforms").then((row)=>{
-        return row;
-    });
+    return database_utility.selectAllFromTable(db,"Platforms");
 }
 
 module.exports = {db, dbPath, initializeDatabase, deleteDatabase, addPlatform, removePlatform, selectPlatforms, fetchPlatforms};
