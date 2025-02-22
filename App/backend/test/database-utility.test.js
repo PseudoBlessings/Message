@@ -71,7 +71,8 @@ test('Function: insertIntoTable | Should insert values into a Table', (done)=>{
     // create the table
     db.serialize(() => {
         db.run(`CREATE TABLE IF NOT EXISTS InsertIntoTable (id INTEGER PRIMARY KEY);`);
-        insertIntoTable(db, "InsertIntoTable", "id", "1");
+        let data = {id: 1};
+        insertIntoTable(db, "InsertIntoTable", data);
         db.get("SELECT * FROM InsertIntoTable;", (err, row) => {
             expect(err).toBeNull();
             expect(row).toHaveProperty('id', 1);

@@ -10,7 +10,7 @@ const fs = require('fs');
  */
 function dropTable(database, table_name) {
     database.serialize(() => {
-        database.run(`DROP TABLE IF EXISTS ${table_name}`);
+        database.run(`DROP TABLE IF EXISTS "${table_name}"`);
     });
 
 }
@@ -24,26 +24,36 @@ function dropTable(database, table_name) {
 function createTable(database, table_name, columns = "") {
     if (columns !== "") {
         database.serialize(() => {
-            database.run(`CREATE TABLE IF NOT EXISTS ${table_name} (${columns})`);
+            database.run(`CREATE TABLE IF NOT EXISTS "${table_name}" (${columns});`);
         });
     }
     else{
             database.serialize(() => {
-                database.run(`CREATE TABLE IF NOT EXISTS ${table_name}`);
+                database.run(`CREATE TABLE IF NOT EXISTS "${table_name}"`);
         });
     }
 }
 
 /**
  * Insert values/Data into Table
- * @param { Database } database - The database 
- * @param { string } table_name - The table
- * @param { string } columns - The columns
- * @param { string } values - The values
+ * @param {Database} database - The database 
+ * @param {string} table_name - The table
+ * @param {Object} data - The object containing column-value pairs
  */
-function insertIntoTable(database, table_name, columns, values) {
+function insertIntoTable(database, table_name, data) {
+    const columns = Object.keys(data).join(", ");
+    const values = Object.values(data).map(value => {
+        if (typeof value === "string") {
+            return `'${value}'`;
+        } else if (typeof value === "boolean") {
+            return value ? 1 : 0;
+        } else {
+            return value;
+        }
+    }).join(", ");
+
     database.serialize(() => {
-        database.run(`INSERT INTO ${table_name} (${columns}) VALUES (${values});`);
+        database.run(`INSERT INTO "${table_name}" (${columns}) VALUES (${values});`);
     });
 }
 
@@ -53,12 +63,12 @@ function insertIntoTable(database, table_name, columns, values) {
  * @param {string} table_name - The table where the value comes from
  * @param {string} columns - The columns where the value comes from
  * @param {string} where - The where statement to choose the value
- * @returns
+ * @returns promise
  */
 function selectFromTable(database, table_name, columns = "*", where = "") {
     return new Promise((resolve, reject) => {
         if(where !== ""){
-            database.all(`SELECT ${columns} FROM ${table_name} WHERE ${where}`, (err, rows) => {
+            database.all(`SELECT ${columns} FROM "${table_name}" WHERE ${where}`, (err, rows) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -67,7 +77,7 @@ function selectFromTable(database, table_name, columns = "*", where = "") {
             });
         }
         else{
-            database.all(`SELECT ${columns} FROM ${table_name}`, (err, rows) => {
+            database.all(`SELECT ${columns} FROM "${table_name}"`, (err, rows) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -87,7 +97,7 @@ function selectFromTable(database, table_name, columns = "*", where = "") {
  */
 function updateTable(database, table_name, set, where) {
     database.serialize(() => {
-        database.run(`UPDATE ${table_name} SET ${set} WHERE ${where};`);
+        database.run(`UPDATE "${table_name}" SET ${set} WHERE ${where};`);
     });
 }
 
@@ -99,7 +109,7 @@ function updateTable(database, table_name, set, where) {
  */
 function deleteFromTable(database, table_name = "", where = "") {
     database.serialize(() => {
-        database.run(`DELETE FROM ${table_name} WHERE ${where}`);
+        database.run(`DELETE FROM "${table_name}" WHERE ${where}`);
     });
 }
 
@@ -111,7 +121,7 @@ function deleteFromTable(database, table_name = "", where = "") {
  */
 function selectAllFromTable(database, table_name = "") {
     return new Promise((resolve, reject) => {
-        database.all(`SELECT * FROM ${table_name}`, (err, rows) => {
+        database.all(`SELECT * FROM "${table_name}"`, (err, rows) => {
             if (err) {
                 reject(err);
             } else {
@@ -128,7 +138,7 @@ function selectAllFromTable(database, table_name = "") {
  */
 function deleteAllFromTable(database, table_name = "") {
     database.serialize(() => {
-        database.run(`DELETE FROM ${table_name}`);
+        database.run(`DELETE FROM "${table_name}"`);
     });
 }
 
