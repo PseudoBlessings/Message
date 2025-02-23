@@ -98,11 +98,20 @@ function removePlatformAccount(account, platform){
 
 /**
  * 
- * @param {string} account 
+ * @param {string} account
+ * @param {string} platform 
  * @returns {Object}
  */
-function selectPlatformAccounts(account){
-    return database_utility.selectFromTable(db, "Platform Accounts", "*", `account_id = '${account}'`);
+function selectPlatformAccounts(account, platform){
+    if(account === undefined){
+        return database_utility.selectFromTable(db, "Platform Accounts", "*", `platform_id = '${platform}'`);
+    }
+
+    if(platform === undefined){
+        return database_utility.selectFromTable(db, "Platform Accounts", "*", `account_id = '${account}'`);
+    }
+    
+    return database_utility.selectFromTable(db, "Platform Accounts", "*", `account_id = '${account}' AND platform_id = '${platform}'`);
 }
 
 function fetchPlatformAccounts(){
